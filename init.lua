@@ -910,6 +910,13 @@ require('lazy').setup({
     --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
+  {
+    'mg979/vim-visual-multi',
+    branch = 'master',
+    config = function()
+      vim.keymap.set('n', '<C-n>', '<Plug>(VM-Find-Under)')
+    end,
+  },
 
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
@@ -965,5 +972,9 @@ vim.opt.whichwrap:append {
   l = true,
 }
 
+vim.keymap.set('n', '<C-S-Down>', ':m .+1<CR>==')
+vim.keymap.set('n', '<C-S-Up>', ':m .-2<CR>==')
+vim.keymap.set('v', '<C-S-Down>', ":m '>+1<CR>gv=gv")
+vim.keymap.set('v', '<C-S-Up>', ":m '<-2<CR>gv=gv")
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

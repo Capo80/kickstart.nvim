@@ -605,9 +605,9 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        -- clangd = {},
+        clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {},
         rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -917,7 +917,30 @@ require('lazy').setup({
       vim.keymap.set('n', '<C-n>', '<Plug>(VM-Find-Under)')
     end,
   },
+  {
+    'nosduco/remote-sshfs.nvim',
+    dependencies = { 'nvim-telescope/telescope.nvim' },
+    opts = {
+      -- Refer to the configuration section below
+      -- or leave empty for defaults
+    },
+  },
+  {
+    'm00qek/baleia.nvim',
+    version = '*',
+    config = function()
+      vim.g.baleia = require('baleia').setup {}
 
+      -- Command to colorize the current buffer
+      vim.api.nvim_create_user_command('BaleiaColorize', function()
+        vim.g.baleia.once(vim.api.nvim_get_current_buf())
+      end, { bang = true })
+
+      -- Command to show logs
+      vim.api.nvim_create_user_command('BaleiaLogs', vim.g.baleia.logger.show, { bang = true })
+    end,
+  },
+  { 'catppuccin/nvim', name = 'catppuccin', priority = 1000 },
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
@@ -971,10 +994,13 @@ vim.opt.whichwrap:append {
   h = true,
   l = true,
 }
+vim.cmd.colorscheme 'catppuccin-mocha'
 
 vim.keymap.set('n', '<C-S-Down>', ':m .+1<CR>==')
 vim.keymap.set('n', '<C-S-Up>', ':m .-2<CR>==')
 vim.keymap.set('v', '<C-S-Down>', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', '<C-S-Up>', ":m '<-2<CR>gv=gv")
+
+vim.keymap.set('n', '<leader>gt', '<cmd>tab split | lua vim.lsp.buf.definition()<CR>', {})
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
